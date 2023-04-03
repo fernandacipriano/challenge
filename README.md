@@ -1,29 +1,35 @@
-# Docker + Lumen with Nginx, MySQL, and Memcached
+# Challenge
 
-![image](Lumen_splash.png)
+## O que é?
+Refere-se a uma api simples para enviar transações bancárias entre contas de usuários e lojas.
 
-## Why?
 
-Setting up an entire Lumen stack can be time consuming. This repo is a quick way to write apps in PHP using Lumen from an any Docker client. It uses docker-compose to setup the application services, databases, cache, etc...
-
-## Clone this repo
+## Instalação
 
 ```bash
-git clone https://github.com/saada/docker-lumen.git
-cd docker-lumen
+git clone https://github.com/fernandacipriano/challenge.git
+cd challenge
 ```
-
-## Create Lumen App
-
-now, create the app in the `images/php` directory named `app`
-
+# Subindo containers
 ```bash
-docker run --rm -it -v $(pwd)/images/php:/app $(docker build -q .) composer create-project --prefer-dist laravel/lumen ./app
+docker-compose up --build -d
 ```
 
-### Configuration
+# Acessando container php
+```bash
+docker-compose exec app bash
+```
+# Execução do composer
+```bash
+composer install
+```
+# Executando migrations e alimentando o banco
+```bash
+php artisan migrate:fresh --seed
+```
 
-There are two configurations using `.env` files. One `.env` file for docker-compose.yaml and another for the php application.
+
+### Configuração
 
 ```sh
 # copy both files and make changes to them if needed
@@ -31,46 +37,54 @@ cp .env.docker.example .env
 cp .env.app.example images/php/app/.env
 ```
 
-To change configuration values, look in the `docker-compose.yml` file and change the `php` container's environment variables. These directly correlate to the Lumen environment variables.
+## Requisições
 
-## Docker Setup
+No Insomnia ou outro de sua prefência, pode-se acessar cada método abaixo:
 
-### [Docker for Mac](https://docs.docker.com/docker-for-mac/)
+---
+- /api/user [GET]
+    - Lista todos os usuários
 
-### [Docker for Windows](https://docs.docker.com/docker-for-windows/)
+- /api/user [POST]
+    - Cria um novo usuário
+    ```json
+    {
+        "name": "Alegria",
+        "email": "alegria@mail.com",
+        "identity": "123456",
+        "password": "654321",
+        "balance": 500,
+        "type": "COMMOM"
+    }
+    ```
+- /api/user/{id} [GET]
+    - Traz os dados do usuário com o id requisitado
 
-### [Docker for Linux](https://docs.docker.com/engine/installation/linux/)
+- /api/transaction [GET]
+    - Traz todas as transações existentes no banco de dados
 
-### Build & Run
+- /api/transaction [POST]
+    - Efetua uma transação
+    ```json
+    {
+        "payer": 1,
+        "payee": 2,
+        "amount": 10
+    }
+    ```
 
-```bash
-docker-compose up --build -d
-```
-
-Navigate to [http://localhost:80](http://localhost:80) and you should see something like this
-![image](Lumen_browser.png)
-
-Success! You can now start developing your Lumen app on your host machine and you should see your changes on refresh! Classic PHP development cycle. A good place to start is `images/php/app/routes/web.php`.
-
-Feel free to configure the default port 80 in `docker-compose.yml` to whatever you like.
-
-### Stop Everything
+### Parando os containers
 
 ```bash
 docker-compose down
 ```
 
-## Running Artisan commands
+## Executando comandos artisan
 
 ```sh
 docker-compose exec php sh
-# inside the container
+# dentro do container
 cd ..
 php artisan migrate
 php artisan cache:clear
 ```
-
-## Contribute
-
-Submit a Pull Request!
-# challenge
