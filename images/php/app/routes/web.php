@@ -20,7 +20,7 @@ $router->get('/', function () use ($router) {
 $router->group(['prefix' => 'api'], function () use ($router) {
     $router->group(['prefix' => 'user'], function () use ($router) {
         $router->get('/', 'UserController@list');
-        $router->post('create', 'UserController@create');
+        $router->post('/', 'UserController@create');
         $router->get('/{id}', 'UserController@getUser');
     });
 
