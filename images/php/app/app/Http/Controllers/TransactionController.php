@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Transaction;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 use App\Interfaces\TransactionServiceInterface;
+use App\Models\TransactionValidate;
+use Symfony\Component\HttpFoundation\Response;
 
 class TransactionController extends Controller
 {
@@ -19,25 +19,21 @@ class TransactionController extends Controller
 
     public function index()
     {
-        $transactions = Transaction::all();
+        $transactions = $this->transactionService->getTransactions();
         return response()->json($transactions, 200);
     }
 
     public function transaction(Request $request)
     {
         try {
-            $this->validate($request, [
-                'payer' => 'required|integer',
-                'receiver' => 'required|integer',
-                'amount' => 'required|numeric'
-            ]);
+            $this->validate($request, 
+                TransactionValidate::RULE_TRANSACTION, 
+                TransactionValidate::RULE_MESSAGE_TRANSACTION
+            );
 
-            $this->transactionService->performTransaction($request->all());
-            
-            return response()->json(['success' => 'Transação realizada com sucesso'], 200);
+            return $this->transactionService->performTransaction($request->all());
         } catch (\Exception $e) {
-            DB::rollback();
-            return response()->json(['error' => 'Erro ao realizar transação'], 500);
+            return response()->json(['error' => $e->getMessage()], Response::HTTP_BAD_REQUEST);
         }
     }
 

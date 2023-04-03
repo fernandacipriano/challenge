@@ -2,48 +2,42 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\User;
+use App\Interfaces\UserServiceInterface;
+use App\Models\UserValidate;
 use Illuminate\Http\Request;
 use Exception;
+use Symfony\Component\HttpFoundation\Response;
 
 class UserController extends Controller
 {
 
+    private $userService;
+
+    public function __construct(UserServiceInterface $userService)
+    {
+        $this->userService = $userService;
+    }
+
     public function create(Request $request){
         try{
-            $this->validate($request, [
-                'name' => 'required',
-                'identity' => 'required|unique:users',
-                'email' => 'required|unique:users',
-                'password' => 'required',
-                'balance' => 'required',
-                'type' => 'required'
-            ]);
+            $this->validate($request, 
+                UserValidate::RULE_USER, 
+                UserValidate::RULE_MESSAGE_USER
+            );
 
-            $user = new User();
-            $user->name = $request->name;
-            $user->identity = $request->identity;
-            $user->email = $request->email;
-            $user->password = $request->password;
-            $user->balance = $request->balance;
-            $user->type = $request->type;            
-            $user->save();
+            return $this->userService->save($request->all());
+
         }catch(Exception $e){
-            return response()->json($e->getMessage(), 422);
+            return response()->json($e->getMessage(), Response::HTTP_BAD_REQUEST);
         }
     }
 
-
     public function getUser($id){
-        $user = User::find($id);
-        return response()->json($user);
+        return $this->userService->getUser($id);
     }
 
     public function list(){
-        $users = User::all();
-        return response()->json($users);
+        return response()->json($this->userService->list());
     }
-
-    
     
 }

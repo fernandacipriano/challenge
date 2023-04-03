@@ -25,7 +25,7 @@ $router->group(['prefix' => 'api'], function () use ($router) {
     });
 
     $router->group(['prefix' => 'transaction'], function () use ($router) {
-        $router->get('list', 'TransactionController@index');
+        $router->get('/', 'TransactionController@index');
         $router->post('/', 'TransactionController@transaction');
         
     });

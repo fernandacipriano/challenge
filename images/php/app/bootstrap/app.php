@@ -1,9 +1,9 @@
 <?php
 
-use App\Interfaces\TransactionServiceInterface;
-use App\Interfaces\TransactionRepositoryInterface;
-use App\Services\TransactionService;
-use App\Repositories\TransactionRepository;
+// use App\Interfaces\TransactionServiceInterface;
+// use App\Interfaces\TransactionRepositoryInterface;
+// use App\Services\TransactionService;
+// use App\Repositories\TransactionRepository;
 
 require_once __DIR__.'/../vendor/autoload.php';
 
@@ -43,8 +43,10 @@ $app->withEloquent();
 |
 */
 
-$app->bind(TransactionServiceInterface::class, TransactionService::class);
-$app->bind(TransactionRepositoryInterface::class, TransactionRepository::class);
+$app->bind(App\Interfaces\TransactionServiceInterface::class, App\Services\TransactionService::class);
+$app->bind(App\Interfaces\TransactionRepositoryInterface::class, App\Repositories\TransactionRepository::class);
+$app->bind(App\Interfaces\UserRepositoryInterface::class, App\Repositories\UserRepository::class);
+$app->bind(App\Interfaces\UserServiceInterface::class, App\Services\UserService::class);
 
 $app->singleton(
     Illuminate\Contracts\Debug\ExceptionHandler::class,
@@ -99,7 +101,7 @@ $app->configure('app');
 |
 */
 
-// $app->register(App\Providers\AppServiceProvider::class);
+$app->register(App\Providers\AppServiceProvider::class);
 // $app->register(App\Providers\AuthServiceProvider::class);
 // $app->register(App\Providers\EventServiceProvider::class);
 

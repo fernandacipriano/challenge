@@ -9,6 +9,12 @@ use Illuminate\Support\Facades\DB;
 class TransactionRepository implements TransactionRepositoryInterface
 {
     
+    public function getTransactions(): array
+    {
+        return Transaction::all()->toArray();
+    }
+
+
     public function conclude($amount, $payer, $receiver): bool
     {
 
