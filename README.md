@@ -10,24 +10,23 @@ Refere-se a uma api simples para enviar transações bancárias entre contas de 
 git clone https://github.com/fernandacipriano/challenge.git
 cd challenge
 ```
-# Subindo containers
+### Subindo containers
 ```bash
 docker-compose up --build -d
 ```
 
-# Acessando container php
+### Acessando container php
 ```bash
 docker-compose exec app bash
 ```
-# Execução do composer
+### Execução do composer
 ```bash
 composer install
 ```
-# Executando migrations e alimentando o banco
+### Executando migrations e alimentando o banco
 ```bash
 php artisan migrate:fresh --seed
 ```
-
 
 ### Configuração
 
@@ -79,7 +78,7 @@ No Insomnia ou outro de sua prefência, pode-se acessar cada método abaixo:
 docker-compose down
 ```
 
-## Executando comandos artisan
+### Executando comandos artisan
 
 ```sh
 docker-compose exec php sh
